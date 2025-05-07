@@ -1,5 +1,6 @@
 using AtonInternshipAssigment.Models;
 using AtonInternshipAssigment.Repositories;
+using AtonInternshipAssigment.Services;
 using Microsoft.Data.SqlClient;
 using System.Reflection;
 
@@ -15,6 +16,7 @@ builder.Services.AddOpenApi();
 
 // Настройка БД
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<CheckUserAuthorization>();
 builder.Services.AddScoped(_ => new SqlConnection(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 

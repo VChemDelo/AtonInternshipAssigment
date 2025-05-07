@@ -15,7 +15,7 @@ namespace AtonInternshipAssigment.Repositories
         }
 
         // Добавление нового пользователя
-        public async Task CreateUser(string login, string password, string newUserLogin, string newUserPassword, string newUserName, int newUserGender, DateTime birthday, bool admin)
+        public async Task CreateUser(string login, string newUserLogin, string newUserPassword, string newUserName, int newUserGender, DateTime birthday, bool admin)
         {
             using var connection = new SqlConnection(_connectionString);
 
@@ -38,66 +38,51 @@ namespace AtonInternshipAssigment.Repositories
                 (@Guid, @Login, @Password, @Name, @Gender, @Birthday, @Admin, @CreatedBy, @CreatedOn)", createUser);
         }
 
-        public async Task ChangeUserName(string login, string password, string newUserName)
+        // Изменение имени пользователя
+        public async Task ChangeUserName(string login, string newUserName)
         {
             using var connection = new SqlConnection(_connectionString);
 
             User changeUser = new User()
             {
                 Login = login,
-                Password = password,
-                Name = newUserName,
+                Name = newUserName
             };
 
             await connection.ExecuteAsync(
-                "UPDATE Users SET Name = @Name WHERE Login = @Login", changeUser);
+                "UPDATE Users SET Name = @Name WHERE Login = @Login AND RevokedOn IS NULL", changeUser);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // Проверка пользователя на наличие прав администратора
-        public bool UserIsAdmin(string login, string password)
+        // Изменение пола пользователя
+        public async Task ChangeUserGender(string login, int newUserGender)
         {
             using var connection = new SqlConnection(_connectionString);
 
-            User userAdmin = new User()
+            User changeUser = new User()
             {
                 Login = login,
-                Password = password
+                Gender = newUserGender,
+                ModifiedOn = DateTime.UtcNow
             };
 
-            var userExists = connection.QueryAsync(
-                "SELECT * FROM Users WHERE Login = @login AND Password = @password AND Admin = 1", userAdmin);
-
-            if(userExists != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-               
+            await connection.ExecuteAsync(
+                "UPDATE Users SET Gender = @Gender, ModifiedBy = @Login, ModifiedOn = @ModifiedOn WHERE Login = @Login AND RevokedOn IS NULL", changeUser);
         }
 
+        // Изменение дня рождения пользователя
+        public async Task ChangeUserBirthday(string login, DateTime newBirthday)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            User changeUser = new User()
+            {
+                Login = login,
+                Birthday = newBirthday,
+                ModifiedOn = DateTime.UtcNow
+            };
+
+            await connection.ExecuteAsync(
+                "UPDATE Users SET Birthday = @Birthday, ModifiedBy = @Login, ModifiedOn = @ModifiedOn  WHERE Login = @Login AND RevokedOn IS NULL", changeUser);
+        }
     }
 }
