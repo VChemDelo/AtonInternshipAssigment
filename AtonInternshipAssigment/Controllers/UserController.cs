@@ -68,7 +68,7 @@ namespace AtonInternshipAssigment.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        // 
         [HttpPatch]
         public async Task<IActionResult> ChangeUserBirthday(string login, string password, DateTime newBirthday)
         {
