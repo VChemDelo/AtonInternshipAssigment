@@ -1,6 +1,8 @@
-﻿using AtonInternshipAssigment.Repositories;
+﻿using AtonInternshipAssigment.Models;
+using AtonInternshipAssigment.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 
 namespace AtonInternshipAssigment.Controllers
 {
@@ -15,10 +17,5 @@ namespace AtonInternshipAssigment.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(string login, string password, string newUserLogin, string newUserPassword, string newUserName, int newUserGender, DateTime Birthday, bool admin)
-        {
-
-        }
     }
 }

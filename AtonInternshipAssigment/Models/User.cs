@@ -25,7 +25,7 @@ namespace AtonInternshipAssigment.Models
 
         public bool Admin { get; set; }
 
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedOn { get; set; } 
 
         public string CreatedBy { get; set; }
 
