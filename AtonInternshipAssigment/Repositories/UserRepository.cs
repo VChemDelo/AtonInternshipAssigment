@@ -84,5 +84,38 @@ namespace AtonInternshipAssigment.Repositories
             await connection.ExecuteAsync(
                 "UPDATE Users SET Birthday = @Birthday, ModifiedBy = @Login, ModifiedOn = @ModifiedOn  WHERE Login = @Login AND RevokedOn IS NULL", changeUser);
         }
+
+        // Изменение пароля
+        public async Task ChangeUserPassword(string login, string newUserPassword)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            User changeUser = new User()
+            {
+                Login = login,
+                Password = newUserPassword,
+                ModifiedOn = DateTime.UtcNow
+            };
+
+            await connection.ExecuteAsync(
+                "UPDATE Users SET Password = @Password, ModifiedBy = @Login, ModifiedOn = @ModifiedOn  WHERE Login = @Login AND RevokedOn IS NULL", changeUser);
+        }
+
+        // Изменение логина
+        public async Task ChangeUserLogin(string login, string newUserLogin)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            var user = new 
+            {
+                Login = login,
+                NewLogin = newUserLogin,
+                ModifiedOn = DateTime.UtcNow
+
+            };
+
+            await connection.ExecuteAsync(
+                "UPDATE Users SET Login = @NewLogin, ModifiedBy = @Login, ModifiedOn = @ModifiedOn  WHERE Login = @Login AND RevokedOn IS NULL", user);
+        }
     }
 }

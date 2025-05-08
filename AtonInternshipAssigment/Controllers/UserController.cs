@@ -21,6 +21,7 @@ namespace AtonInternshipAssigment.Controllers
             _checkUserAuthorization = checkUserAuthorization;
         }
 
+        // Изменение имени
         [HttpPatch]
         public async Task<IActionResult> ChangeUserName(string login,string password, string newUserName)
         {
@@ -46,6 +47,7 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
+        // Изменение пола
         [HttpPatch]
         public async Task<IActionResult> ChangeUserGender(string login, string password, int newUserGender)
         {
@@ -68,7 +70,8 @@ namespace AtonInternshipAssigment.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        // 
+        
+        // Изменение даты рождения 
         [HttpPatch]
         public async Task<IActionResult> ChangeUserBirthday(string login, string password, DateTime newBirthday)
         {
@@ -85,6 +88,62 @@ namespace AtonInternshipAssigment.Controllers
                 await _userRepository.ChangeUserBirthday(login, newBirthday);
 
                 return Ok("Дата рождения пользователя успешно изменена.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Изменение пароля
+        [HttpPatch] 
+        public async Task<IActionResult> ChangeUserPassword(string login, string password, string newUserPassword)
+        {
+            var userIsExists = _checkUserAuthorization.UserIsExists(login, password);
+
+            if (!userIsExists)
+                return Unauthorized("Неверный логин или пароль!");
+
+            var regex = new Regex("^[a-zA-Z0-9]+$");
+
+            var validateNewPassword = regex.IsMatch(newUserPassword);
+
+            if (!validateNewPassword)
+                return BadRequest("Новый пароль указанно некорректно. Запрещены все символы кроме латинских букв и цифр.");
+
+            try
+            {
+                await _userRepository.ChangeUserPassword(login, newUserPassword);
+
+                return Ok("Пароль пользователя успешно изменен.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Изменение логина
+        [HttpPatch]
+        public async Task<IActionResult> ChangeUserLogin(string login, string password, string newUserLogin)
+        {
+            var userIsExists = _checkUserAuthorization.UserIsExists(login, password);
+
+            if (!userIsExists)
+                return Unauthorized("Неверный логин или пароль!");
+
+            var regex = new Regex("^[a-zA-Z0-9]+$");
+
+            var validateNewLogin = regex.IsMatch(newUserLogin);
+
+            if (!validateNewLogin)
+                return BadRequest("Новый пароль указанно некорректно. Запрещены все символы кроме латинских букв и цифр.");
+
+            try
+            {
+                await _userRepository.ChangeUserLogin(login, newUserLogin);
+
+                return Ok("Логин пользователя успешно изменен.");
             }
             catch (Exception ex)
             {
