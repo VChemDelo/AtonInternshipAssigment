@@ -117,5 +117,46 @@ namespace AtonInternshipAssigment.Repositories
             await connection.ExecuteAsync(
                 "UPDATE Users SET Login = @NewLogin, ModifiedBy = @Login, ModifiedOn = @ModifiedOn  WHERE Login = @Login AND RevokedOn IS NULL", user);
         }
+
+        // Мягкое удаление пользователя (Quartz)
+        public async Task SoftDeleteUsersQuartz(string login, string userLogin)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            await connection.ExecuteAsync(
+            @"UPDATE Users SET RevokedOn = @RevokedOn, RevokedBy = @RevokedBy WHERE Login = @Login",
+            new
+            {
+                RevokedOn = DateTime.UtcNow,
+                RevokedBy = login,
+                Login = userLogin
+            });
+        }
+
+        // Удаление пользователей, помеченных более 3 дней назад (Quartz)
+        public async Task HardDeleteUsersQuartz()
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            await connection.ExecuteAsync(
+                @"DELETE FROM Users WHERE RevokedOn <= @Threshold", new { Threshold = DateTime.UtcNow.AddDays(-3) });
+        }
+
+        // Принудительное удаление пользователя
+        public async Task HardDeleteUser(string userLogin)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            await connection.ExecuteAsync(
+                @"DELETE FROM Users WHERE Login = @Login ", new { Login = userLogin });
+        }
+
+        // Восстановление пользователя
+        public async Task RestoreUser(string login, string userLogin)
+        {
+            using var connection = new SqlConnection(_connectionString);
+            await connection.ExecuteAsync(
+                @"UPDATE Users SET RevokedOn = NULL, RevokedBy = NULL, ModifiedBy = @ModifiedBy, ModifiedOn = @ModifiedOn WHERE Login = @Login", new { Login = userLogin, ModifiedBy = login, ModifiedOn = DateTime.UtcNow});
+        }
     }
 }

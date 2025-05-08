@@ -3,6 +3,7 @@ using AtonInternshipAssigment.Repositories;
 using AtonInternshipAssigment.Services;
 using Microsoft.Data.SqlClient;
 using System.Reflection;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,32 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<CheckUserAuthorization>();
 builder.Services.AddScoped(_ => new SqlConnection(
     builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddQuartz(q =>
+{
+    q.SchedulerId = "UserCleanupScheduler";
+
+    // Регистрация задачи
+    q.AddJob<CleanupJob>(j => j
+        .StoreDurably()
+        .WithIdentity("CleanupJob")
+    );
+
+    q.AddTrigger(t => t
+        .WithIdentity("CleanupTrigger")
+        .ForJob("CleanupJob")
+        .WithSimpleSchedule(s => s
+            .WithInterval(TimeSpan.FromDays(3))
+            .RepeatForever()
+        )
+        .StartNow()
+    );
+});
+
+builder.Services.AddQuartzHostedService(q =>
+{
+    q.WaitForJobsToComplete = true;
+});
 
 var app = builder.Build();
 

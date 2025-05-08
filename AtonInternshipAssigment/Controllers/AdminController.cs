@@ -175,5 +175,68 @@ namespace AtonInternshipAssigment.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // Мягкое удаление пользователя.
+        [HttpDelete]
+        public async Task<IActionResult> SoftDeleteUsers(string login, string password, string userLogin)
+        {
+            var userIsAdmin = _checkUserAuthorization.UserIsAdmin(login, password);
+
+            if (!userIsAdmin)
+                return Unauthorized("Неверный логин или пароль!");
+
+            try
+            {
+                await _userRepository.SoftDeleteUsersQuartz(login, userLogin);
+
+                return Ok("Пользователь отмечен на удаление. Он будет удален через 3 дня");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Принудительное удаление пользователя
+        [HttpDelete]
+        public async Task<IActionResult> HardDeleteUser(string login, string password, string userLogin)
+        {
+            var userIsAdmin = _checkUserAuthorization.UserIsAdmin(login, password);
+
+            if (!userIsAdmin)
+                return Unauthorized("Неверный логин или пароль!");
+
+            try
+            {
+                await _userRepository.HardDeleteUser(userLogin);
+
+                return Ok("Пользователь удален");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Восстановление пользователя
+        [HttpPost]
+        public async Task<IActionResult> RestoreUser(string login, string password, string userLogin)
+        {
+            var userIsAdmin = _checkUserAuthorization.UserIsAdmin(login, password);
+
+            if (!userIsAdmin)
+                return Unauthorized("Неверный логин или пароль!");
+
+            try
+            {
+                await _userRepository.RestoreUser(login, userLogin);
+
+                return Ok("Пользователь убран из списка на мягкое удаление");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
