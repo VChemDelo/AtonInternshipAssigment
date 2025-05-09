@@ -185,6 +185,9 @@ namespace AtonInternshipAssigment.Controllers
             if (!userIsAdmin)
                 return Unauthorized("Неверный логин или пароль!");
 
+            if (ageThreshold < 0 || ageThreshold > 100)
+                return BadRequest("Возраст не может быть больше 100 лет и меньше 0 лет.");
+
             try
             {
                 DateTime cutoffDate = DateTime.UtcNow.AddYears(-ageThreshold);
