@@ -24,7 +24,18 @@ namespace AtonInternshipAssigment.Controllers
             _connectionString = config.GetConnectionString("DefaultConnection");
         }
 
-        // Добавление нового пользователя
+        /// <summary>
+        /// Добавление пользователя.
+        /// </summary>
+        /// <param name="login">Логин администратора</param>
+        /// <param name="password">Пароль администратора</param>
+        /// <param name="newUserLogin">Логин нового пользователя</param>
+        /// <param name="newUserPassword">Пароль нового пользователя</param>
+        /// <param name="newUserName">Имя нового пользователя</param>
+        /// <param name="newUserGender">Пол нового пользователя</param>
+        /// <param name="birthday">Дата рождения нового пользователя</param>
+        /// <param name="admin">Будут ли у пользователя права администратора</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateUser(string login, string password, string newUserLogin, string newUserPassword, string newUserName, int newUserGender, DateTime birthday, bool admin)
         {
@@ -50,7 +61,12 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
-        // Получение всех активных пользователей
+        /// <summary>
+        /// Получение активных пользователей.
+        /// </summary>
+        /// <param name="login">Логин администратора</param>
+        /// <param name="password">Пароль администратора</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllActiveUsers(string login, string password)
         {
@@ -82,7 +98,13 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
-        // Получение пользователя по логину
+        /// <summary>
+        /// Получение пользователя по логину.
+        /// </summary>
+        /// <param name="login">Логин администратора</param>
+        /// <param name="password">Пароль администратора</param>
+        /// <param name="userLogin">Логин искомого пользователя</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetUsersByLogin(string login, string password, string userLogin)
         {
@@ -115,8 +137,12 @@ namespace AtonInternshipAssigment.Controllers
 
         }
 
-        // Получение информации о пользователе
-        // TODO добавить обычному пользователю
+        /// <summary>
+        /// Получение информации о пользователе.
+        /// </summary>
+        /// <param name="login">Логин администратора</param>
+        /// <param name="password">Пароль администратора</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetUserByLoginAndPassword(string login, string password)
         {
@@ -142,7 +168,13 @@ namespace AtonInternshipAssigment.Controllers
 
         }
 
-        // Получение пользователей старше определенного возраста
+        /// <summary>
+        /// Получение пользователей старше определенного возраста.
+        /// </summary>
+        /// <param name="login">Логин администратора</param>
+        /// <param name="password">Пароль администратора</param>
+        /// <param name="ageThreshold">Значение старше какого возраста необходимо получить пользователей</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetUserOlderThan(string login, string password, int ageThreshold)
         {
@@ -155,7 +187,7 @@ namespace AtonInternshipAssigment.Controllers
 
             try
             {
-                DateTime cutoffDate = DateTime.Now.AddYears(-ageThreshold);
+                DateTime cutoffDate = DateTime.UtcNow.AddYears(-ageThreshold);
 
                 var userByLogin = connection.Query(
                     "SELECT * FROM Users WHERE Birthday < @CutoffDate", new { CutoffDate = cutoffDate}).ToList();
@@ -176,7 +208,13 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
-        // Мягкое удаление пользователя.
+        /// <summary>
+        /// Мягкое удаление пользователя.
+        /// </summary>
+        /// <param name="login">Логин администратора</param>
+        /// <param name="password">Пароль администратора</param>
+        /// <param name="userLogin">Логин искомого пользователя</param>
+        /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> SoftDeleteUsers(string login, string password, string userLogin)
         {
@@ -197,7 +235,13 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
-        // Принудительное удаление пользователя
+        /// <summary>
+        /// Принудительное удаление пользователя.
+        /// </summary>
+        /// <param name="login">Логин администратора</param>
+        /// <param name="password">Пароль администратора</param>
+        /// <param name="userLogin">Логин искомого пользователя</param>
+        /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> HardDeleteUser(string login, string password, string userLogin)
         {
@@ -218,7 +262,13 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
-        // Восстановление пользователя
+        /// <summary>
+        /// Восстановление пользователя.
+        /// </summary>
+        /// <param name="login">Логин администратора</param>
+        /// <param name="password">Пароль администратора</param>
+        /// <param name="userLogin">Логин искомого пользователя</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> RestoreUser(string login, string password, string userLogin)
         {

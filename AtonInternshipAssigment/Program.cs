@@ -15,7 +15,6 @@ builder.Services.AddSwaggerGen();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-// Настройка БД
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<CheckUserAuthorization>();
 builder.Services.AddScoped(_ => new SqlConnection(
@@ -25,7 +24,6 @@ builder.Services.AddQuartz(q =>
 {
     q.SchedulerId = "UserCleanupScheduler";
 
-    // Регистрация задачи
     q.AddJob<CleanupJob>(j => j
         .StoreDurably()
         .WithIdentity("CleanupJob")

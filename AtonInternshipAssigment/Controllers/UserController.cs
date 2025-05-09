@@ -21,7 +21,13 @@ namespace AtonInternshipAssigment.Controllers
             _checkUserAuthorization = checkUserAuthorization;
         }
 
-        // Изменение имени
+        /// <summary>
+        /// Изменение имени.
+        /// </summary>
+        /// <param name="login">Логин пользователя</param>
+        /// <param name="password">Пароль пользователя</param>
+        /// <param name="newUserName">Новое имя пользователя</param>
+        /// <returns></returns>
         [HttpPatch]
         public async Task<IActionResult> ChangeUserName(string login,string password, string newUserName)
         {
@@ -47,7 +53,13 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
-        // Изменение пола
+        /// <summary>
+        /// Изменение пола.
+        /// </summary>
+        /// <param name="login">Логин пользователя</param>
+        /// <param name="password">Пароль пользователя</param>
+        /// <param name="newUserGender">Новый пол пользователя</param>
+        /// <returns></returns>
         [HttpPatch]
         public async Task<IActionResult> ChangeUserGender(string login, string password, int newUserGender)
         {
@@ -70,8 +82,14 @@ namespace AtonInternshipAssigment.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
-        // Изменение даты рождения 
+
+        /// <summary>
+        /// Изменение даты рождения.
+        /// </summary>
+        /// <param name="login">Логин пользователя</param>
+        /// <param name="password">Пароль пользователя</param>
+        /// <param name="newBirthday">Новая дата рождения пользователя</param>
+        /// <returns></returns>
         [HttpPatch]
         public async Task<IActionResult> ChangeUserBirthday(string login, string password, DateTime newBirthday)
         {
@@ -95,7 +113,13 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
-        // Изменение пароля
+        /// <summary>
+        /// Изменение пароля.
+        /// </summary>
+        /// <param name="login">Логин пользователя</param>
+        /// <param name="password">Пароль пользователя</param>
+        /// <param name="newUserPassword">Новый пароль пользователя</param>
+        /// <returns></returns>
         [HttpPatch] 
         public async Task<IActionResult> ChangeUserPassword(string login, string password, string newUserPassword)
         {
@@ -123,7 +147,14 @@ namespace AtonInternshipAssigment.Controllers
             }
         }
 
-        // Изменение логина
+        // 
+        /// <summary>
+        /// Изменение логина.
+        /// </summary>
+        /// <param name="login">Логин пользователя</param>
+        /// <param name="password">Пароль пользователя</param>
+        /// <param name="newUserLogin">Новый логин пользователя</param>
+        /// <returns></returns>
         [HttpPatch]
         public async Task<IActionResult> ChangeUserLogin(string login, string password, string newUserLogin)
         {
